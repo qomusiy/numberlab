@@ -3,52 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#f7f2ea" />
-  <title>Mental Math</title>
+  <meta name="theme-color" content="#f7f0e6" />
+  <title>Number Lab</title>
   <style>
     :root {
-      color-scheme: light dark;
-      --bg: #f7f2ea;
-      --bg-2: #efe6da;
-      --surface: rgba(255, 252, 247, 0.78);
-      --surface-strong: rgba(255, 252, 247, 0.94);
-      --text: #171512;
-      --muted: #746b60;
-      --line: rgba(23, 21, 18, 0.12);
-      --line-strong: rgba(23, 21, 18, 0.20);
+      color-scheme: light;
+      --bg: #f7f0e6;
+      --bg-2: #efe1cf;
+      --surface: rgba(255, 252, 247, 0.82);
+      --surface-strong: rgba(255, 252, 247, 0.96);
+      --text: #171411;
+      --muted: #70675d;
+      --faint: rgba(23, 20, 17, 0.08);
+      --line: rgba(23, 20, 17, 0.12);
+      --line-strong: rgba(23, 20, 17, 0.2);
       --accent: #191714;
-      --accent-soft: rgba(25, 23, 20, 0.08);
+      --accent-ink: #f8f1e8;
       --gold: #a67d45;
-      --good: #15835a;
-      --good-soft: rgba(21, 131, 90, 0.15);
-      --bad: #bd3d36;
-      --bad-soft: rgba(189, 61, 54, 0.16);
-      --shadow: 0 28px 88px rgba(54, 45, 32, 0.18);
-      --shadow-soft: 0 18px 42px rgba(54, 45, 32, 0.11);
+      --good: #16825a;
+      --good-soft: rgba(22, 130, 90, 0.15);
+      --bad: #bf3e37;
+      --bad-soft: rgba(191, 62, 55, 0.16);
+      --shadow: 0 30px 90px rgba(58, 47, 34, 0.18);
+      --shadow-soft: 0 16px 42px rgba(58, 47, 34, 0.1);
       --radius-xl: 34px;
       --radius-lg: 24px;
-      --radius-md: 18px;
       --time-progress: 100%;
     }
 
-    [data-theme="dark"] {
+    :root[data-theme="dark"] {
+      color-scheme: dark;
       --bg: #0e0d0b;
-      --bg-2: #191611;
-      --surface: rgba(28, 25, 20, 0.78);
-      --surface-strong: rgba(34, 30, 24, 0.94);
-      --text: #fff7ea;
+      --bg-2: #1b1711;
+      --surface: rgba(30, 26, 21, 0.82);
+      --surface-strong: rgba(35, 31, 25, 0.96);
+      --text: #fff7eb;
       --muted: #b8ab99;
-      --line: rgba(255, 247, 234, 0.12);
-      --line-strong: rgba(255, 247, 234, 0.22);
-      --accent: #fff7ea;
-      --accent-soft: rgba(255, 247, 234, 0.08);
-      --gold: #d0a461;
-      --good: #42c58d;
-      --good-soft: rgba(66, 197, 141, 0.16);
-      --bad: #ef6a61;
-      --bad-soft: rgba(239, 106, 97, 0.18);
-      --shadow: 0 30px 90px rgba(0, 0, 0, 0.36);
-      --shadow-soft: 0 18px 42px rgba(0, 0, 0, 0.24);
+      --faint: rgba(255, 247, 235, 0.08);
+      --line: rgba(255, 247, 235, 0.13);
+      --line-strong: rgba(255, 247, 235, 0.24);
+      --accent: #fff7eb;
+      --accent-ink: #11100d;
+      --gold: #d1a562;
+      --good: #43c78f;
+      --good-soft: rgba(67, 199, 143, 0.16);
+      --bad: #ef6b62;
+      --bad-soft: rgba(239, 107, 98, 0.18);
+      --shadow: 0 34px 94px rgba(0, 0, 0, 0.38);
+      --shadow-soft: 0 18px 44px rgba(0, 0, 0, 0.26);
     }
 
     * {
@@ -71,115 +73,41 @@
       color: var(--text);
       background:
         radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.72), transparent 27rem),
-        radial-gradient(circle at 82% 92%, rgba(166, 125, 69, 0.24), transparent 28rem),
+        radial-gradient(circle at 84% 94%, rgba(166, 125, 69, 0.24), transparent 28rem),
         linear-gradient(135deg, var(--bg), var(--bg-2));
       transition: background 260ms ease, color 260ms ease;
       overflow-x: hidden;
     }
 
-    [data-theme="dark"] body,
-    body[data-theme="dark"] {
+    :root[data-theme="dark"] body {
       background:
-        radial-gradient(circle at 16% 0%, rgba(255, 247, 234, 0.10), transparent 27rem),
-        radial-gradient(circle at 82% 92%, rgba(208, 164, 97, 0.18), transparent 28rem),
+        radial-gradient(circle at 18% 0%, rgba(255, 247, 235, 0.1), transparent 27rem),
+        radial-gradient(circle at 84% 94%, rgba(209, 165, 98, 0.18), transparent 28rem),
         linear-gradient(135deg, var(--bg), var(--bg-2));
     }
 
+    button {
+      font: inherit;
+    }
+
     .app {
-      width: min(100%, 780px);
+      width: min(100%, 760px);
       min-height: min(760px, calc(100svh - 28px));
       display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 14px;
       animation: pageIn 520ms ease both;
-    }
-
-    .top {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 9px;
-    }
-
-    .metric {
-      min-width: 0;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 11px 12px;
-      background: color-mix(in srgb, var(--surface-strong), transparent 18%);
-      box-shadow: 0 10px 26px rgba(54, 45, 32, 0.06);
-      backdrop-filter: blur(18px);
-    }
-
-    .metric span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.68rem;
-      font-weight: 780;
-      letter-spacing: 0.11em;
-      line-height: 1;
-      text-transform: uppercase;
-    }
-
-    .metric strong {
-      display: block;
-      margin-top: 8px;
-      font-size: clamp(1.28rem, 6vw, 2rem);
-      line-height: 0.9;
-      letter-spacing: -0.06em;
-    }
-
-    .themeSwitch {
-      display: flex;
-      gap: 4px;
-      padding: 4px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: color-mix(in srgb, var(--surface-strong), transparent 20%);
-      backdrop-filter: blur(18px);
-      box-shadow: 0 10px 26px rgba(54, 45, 32, 0.06);
-    }
-
-    .themeOption {
-      border: 0;
-      border-radius: 999px;
-      padding: 10px 12px;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      font: inherit;
-      font-size: 0.82rem;
-      font-weight: 760;
-      transition: background 220ms ease, color 220ms ease, transform 220ms ease;
-    }
-
-    .themeOption[aria-pressed="true"] {
-      background: var(--accent);
-      color: var(--bg);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .themeOption:active {
-      transform: scale(0.96);
     }
 
     .card {
       position: relative;
       min-height: 0;
       display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: clamp(18px, 4svh, 32px);
+      grid-template-rows: auto 1fr;
+      gap: clamp(22px, 4svh, 34px);
       overflow: hidden;
       isolation: isolate;
       border: 1px solid var(--line);
       border-radius: var(--radius-xl);
-      padding: clamp(18px, 4.4vw, 40px);
+      padding: clamp(18px, 4.8vw, 42px);
       background: var(--surface);
       box-shadow: var(--shadow);
       backdrop-filter: blur(24px);
@@ -193,14 +121,14 @@
       z-index: -1;
       pointer-events: none;
       background:
-        linear-gradient(125deg, rgba(255, 255, 255, 0.58), transparent 34%),
-        radial-gradient(circle at 80% 6%, rgba(166, 125, 69, 0.14), transparent 19rem);
+        linear-gradient(125deg, rgba(255, 255, 255, 0.58), transparent 35%),
+        radial-gradient(circle at 82% 8%, rgba(166, 125, 69, 0.14), transparent 19rem);
     }
 
-    [data-theme="dark"] .card::before {
+    :root[data-theme="dark"] .card::before {
       background:
-        linear-gradient(125deg, rgba(255, 247, 234, 0.08), transparent 34%),
-        radial-gradient(circle at 80% 6%, rgba(208, 164, 97, 0.14), transparent 19rem);
+        linear-gradient(125deg, rgba(255, 247, 235, 0.08), transparent 35%),
+        radial-gradient(circle at 82% 8%, rgba(209, 165, 98, 0.14), transparent 19rem);
     }
 
     .card.correctPulse {
@@ -218,34 +146,32 @@
 
     .timeRow {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       justify-content: space-between;
       gap: 12px;
     }
 
-    .timeText {
-      display: flex;
-      align-items: baseline;
-      gap: 7px;
+    .timeLabel {
       color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 780;
-      letter-spacing: 0.1em;
+      font-size: 0.74rem;
+      font-weight: 820;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
     }
 
-    .timeText strong {
+    .timeLeft {
       color: var(--text);
-      font-size: 1.12rem;
-      letter-spacing: -0.04em;
+      font-size: clamp(1.1rem, 5vw, 1.55rem);
+      font-weight: 830;
+      letter-spacing: -0.05em;
       font-variant-numeric: tabular-nums;
     }
 
     .timeBar {
-      height: 10px;
+      height: 11px;
       overflow: hidden;
       border-radius: 999px;
-      background: var(--accent-soft);
+      background: var(--faint);
       border: 1px solid var(--line);
     }
 
@@ -258,34 +184,17 @@
       transform-origin: left center;
     }
 
-    .levelTrack {
-      position: relative;
-      height: 6px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: var(--accent-soft);
-    }
-
-    .levelFill {
-      height: 100%;
-      width: 0%;
-      border-radius: inherit;
-      background: var(--gold);
-      transition: width 420ms cubic-bezier(.22, .61, .36, 1);
-    }
-
     .stage {
       min-height: 0;
       display: grid;
       align-content: center;
-      gap: clamp(22px, 6svh, 44px);
+      gap: clamp(24px, 6svh, 48px);
     }
 
     .problem {
       display: grid;
       justify-items: center;
       text-align: center;
-      gap: 10px;
       transform-origin: center;
     }
 
@@ -293,19 +202,11 @@
       animation: questionEnter 340ms ease both;
     }
 
-    .range {
-      color: var(--gold);
-      font-size: 0.76rem;
-      font-weight: 820;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
     .question {
       margin: 0;
-      font-size: clamp(4.4rem, 21vw, 9.8rem);
-      font-weight: 850;
-      letter-spacing: -0.095em;
+      font-size: clamp(4.8rem, 24vw, 10rem);
+      font-weight: 860;
+      letter-spacing: -0.1em;
       line-height: 0.88;
       font-variant-numeric: tabular-nums;
     }
@@ -316,23 +217,19 @@
       gap: clamp(10px, 2.8vw, 16px);
     }
 
-    button {
-      font: inherit;
-    }
-
     .answer {
       position: relative;
-      min-height: clamp(74px, 18svh, 116px);
+      min-height: clamp(76px, 18svh, 116px);
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
-      background: color-mix(in srgb, var(--surface-strong), transparent 20%);
+      background: rgba(255, 255, 255, 0.22);
       color: var(--text);
       cursor: pointer;
-      box-shadow: 0 12px 30px rgba(54, 45, 32, 0.07);
+      box-shadow: 0 12px 30px rgba(58, 47, 34, 0.07);
       font-size: clamp(2rem, 10vw, 4.4rem);
-      font-weight: 820;
-      letter-spacing: -0.07em;
+      font-weight: 830;
+      letter-spacing: -0.075em;
       font-variant-numeric: tabular-nums;
       transition:
         transform 220ms ease,
@@ -343,24 +240,29 @@
       touch-action: manipulation;
     }
 
+    :root[data-theme="dark"] .answer {
+      background: rgba(255, 247, 235, 0.055);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+    }
+
     .answer::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+      background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.46), transparent);
       transform: translateX(-130%);
       transition: transform 520ms ease;
     }
 
-    [data-theme="dark"] .answer::after {
-      background: linear-gradient(115deg, transparent, rgba(255, 247, 234, 0.13), transparent);
+    :root[data-theme="dark"] .answer::after {
+      background: linear-gradient(115deg, transparent, rgba(255, 247, 235, 0.13), transparent);
     }
 
     @media (hover: hover) and (pointer: fine) {
       .answer:hover:not(:disabled) {
         transform: translateY(-4px);
         border-color: var(--line-strong);
-        box-shadow: 0 18px 38px rgba(54, 45, 32, 0.13);
+        box-shadow: 0 18px 38px rgba(58, 47, 34, 0.13);
       }
 
       .answer:hover:not(:disabled)::after {
@@ -372,24 +274,17 @@
       transform: scale(0.985);
     }
 
-    .answer:focus-visible,
-    .themeOption:focus-visible,
-    .primaryAction:focus-visible {
-      outline: 3px solid color-mix(in srgb, var(--gold), transparent 48%);
-      outline-offset: 3px;
-    }
-
     .answer.correct {
-      border-color: color-mix(in srgb, var(--good), transparent 40%);
+      border-color: rgba(22, 130, 90, 0.56);
       background: var(--good-soft);
-      color: color-mix(in srgb, var(--good), var(--text) 20%);
+      color: var(--good);
       animation: answerCorrect 520ms ease both;
     }
 
     .answer.wrong {
-      border-color: color-mix(in srgb, var(--bad), transparent 40%);
+      border-color: rgba(191, 62, 55, 0.58);
       background: var(--bad-soft);
-      color: color-mix(in srgb, var(--bad), var(--text) 16%);
+      color: var(--bad);
       animation: answerWrong 430ms ease both;
     }
 
@@ -398,11 +293,18 @@
       transform: scale(0.985);
     }
 
+    .answer:focus-visible,
+    .themeOption:focus-visible,
+    .primaryAction:focus-visible {
+      outline: 3px solid rgba(166, 125, 69, 0.42);
+      outline-offset: 3px;
+    }
+
     .resultMark {
       position: absolute;
       left: 50%;
       top: 50%;
-      z-index: 5;
+      z-index: 6;
       width: clamp(82px, 24vw, 132px);
       height: clamp(82px, 24vw, 132px);
       display: grid;
@@ -412,7 +314,7 @@
       color: var(--text);
       box-shadow: var(--shadow);
       font-size: clamp(2.2rem, 11vw, 4.4rem);
-      font-weight: 850;
+      font-weight: 860;
       opacity: 0;
       pointer-events: none;
       transform: translate(-50%, -50%) scale(0.7);
@@ -425,23 +327,26 @@
 
     .resultMark.show.bad {
       color: var(--bad);
-      animation: markPop 580ms ease both;
+      animation: markPop 620ms ease both;
     }
-
 
     .screenOverlay {
       position: absolute;
       inset: 0;
-      z-index: 8;
+      z-index: 10;
       display: grid;
       place-items: center;
       padding: clamp(22px, 6vw, 46px);
-      background: color-mix(in srgb, var(--surface-strong), transparent 3%);
-      backdrop-filter: blur(22px);
+      background: rgba(255, 252, 247, 0.88);
+      backdrop-filter: blur(24px);
       opacity: 0;
       pointer-events: none;
       transform: scale(0.985);
       transition: opacity 260ms ease, transform 260ms ease;
+    }
+
+    :root[data-theme="dark"] .screenOverlay {
+      background: rgba(35, 31, 25, 0.9);
     }
 
     .screenOverlay.show {
@@ -451,61 +356,223 @@
     }
 
     .screenPanel {
-      width: min(100%, 360px);
+      width: min(100%, 390px);
       display: grid;
       justify-items: center;
-      gap: 22px;
+      gap: 18px;
       text-align: center;
       animation: questionEnter 360ms ease both;
     }
 
-    .finalResult {
-      display: grid;
-      justify-items: center;
-      gap: 8px;
-    }
-
-    .finalResult[hidden] {
-      display: none;
-    }
-
-    .finalResult span {
-      color: var(--muted);
+    .eyebrow {
+      margin: 0;
+      color: var(--gold);
       font-size: 0.76rem;
-      font-weight: 820;
+      font-weight: 860;
       letter-spacing: 0.16em;
       text-transform: uppercase;
     }
 
-    .finalResult strong {
+    .screenTitle {
+      margin: 0;
       color: var(--text);
-      font-size: clamp(4.4rem, 24vw, 8.4rem);
-      font-weight: 860;
-      letter-spacing: -0.1em;
+      font-size: clamp(2.55rem, 15vw, 5.2rem);
+      font-weight: 870;
+      letter-spacing: -0.09em;
+      line-height: 0.9;
+    }
+
+    .screenText {
+      max-width: 31rem;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.98rem, 4.2vw, 1.08rem);
+      font-weight: 620;
+      line-height: 1.55;
+      letter-spacing: -0.015em;
+    }
+
+    .bestBox,
+    .finalBox {
+      width: min(100%, 300px);
+      display: grid;
+      gap: 6px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow-soft);
+    }
+
+    :root[data-theme="dark"] .bestBox,
+    :root[data-theme="dark"] .finalBox {
+      background: rgba(255, 247, 235, 0.055);
+    }
+
+    .bestBox span,
+    .finalBox span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 840;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .bestBox strong,
+    .finalBox strong {
+      color: var(--text);
+      font-size: clamp(2.6rem, 14vw, 4.8rem);
+      font-weight: 870;
+      letter-spacing: -0.09em;
       line-height: 0.88;
       font-variant-numeric: tabular-nums;
     }
 
-    .finalResult small {
+    .screenPanel.endPanel {
+      min-height: min(520px, 72svh);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 14px;
+    }
+
+    .scoreResult {
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .scoreResult span,
+    .endBest span {
       color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 860;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .scoreResult strong {
+      color: var(--text);
+      font-size: clamp(5rem, 28vw, 9rem);
+      font-weight: 880;
+      letter-spacing: -0.1em;
+      line-height: 0.82;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .endBest {
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 9px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    :root[data-theme="dark"] .endBest {
+      background: rgba(255, 247, 235, 0.055);
+    }
+
+    .endBest strong {
+      color: var(--text);
+      font-size: 1.08rem;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .endPanel .primaryAction {
+      margin-top: 8px;
+    }
+
+    .themeBlock.bottomTheme {
+      margin-top: auto;
+    }
+
+    .themeBlock.compactTheme {
+      width: min(100%, 230px);
+      gap: 6px;
+    }
+
+    .compactTheme .themeLabel {
+      font-size: 0.62rem;
+      letter-spacing: 0.13em;
+    }
+
+    .compactTheme .themeSwitch {
+      gap: 4px;
+      padding: 4px;
+    }
+
+    .compactTheme .themeOption {
+      min-height: 34px;
+      font-size: 0.76rem;
+      font-weight: 820;
+    }
+
+    .themeBlock {
+      width: min(100%, 300px);
+      display: grid;
+      gap: 10px;
+    }
+
+    .themeLabel {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 840;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .themeSwitch {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--faint);
+    }
+
+    .themeOption {
+      min-height: 48px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
       font-size: 0.92rem;
-      font-weight: 740;
-      letter-spacing: -0.01em;
+      font-weight: 800;
+      transition: background 220ms ease, color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+    }
+
+    .themeOption[aria-pressed="true"] {
+      background: var(--accent);
+      color: var(--accent-ink);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .themeOption:active {
+      transform: scale(0.965);
     }
 
     .primaryAction {
       width: min(100%, 300px);
-      min-height: 68px;
+      min-height: 66px;
       border: 0;
       border-radius: 999px;
       background: var(--accent);
-      color: var(--bg);
+      color: var(--accent-ink);
       cursor: pointer;
       box-shadow: var(--shadow-soft);
-      font-size: clamp(1.05rem, 4.6vw, 1.28rem);
-      font-weight: 820;
+      font-size: clamp(1.04rem, 4.6vw, 1.25rem);
+      font-weight: 840;
       letter-spacing: -0.02em;
-      transition: transform 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+      transition: transform 220ms ease, box-shadow 220ms ease;
       touch-action: manipulation;
     }
 
@@ -582,17 +649,13 @@
         padding: 28px;
       }
 
-      .app {
-        gap: 18px;
-      }
-
       .answers {
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
 
       .answer {
-        min-height: 104px;
-        font-size: clamp(2rem, 4vw, 3.4rem);
+        min-height: 106px;
+        font-size: clamp(2rem, 4vw, 3.45rem);
       }
     }
 
@@ -601,53 +664,35 @@
         min-height: calc(100svh - 28px);
       }
 
-      .top {
-        grid-template-columns: 1fr;
-      }
-
-      .themeSwitch {
-        width: 100%;
-      }
-
-      .themeOption {
-        flex: 1;
-        padding-block: 11px;
-      }
-
       .card {
         border-radius: 30px;
       }
 
-      .metric {
-        border-radius: 17px;
-        padding: 10px;
-      }
-
-      .metric span {
-        font-size: 0.62rem;
-      }
-
-      .timeRow {
-        align-items: flex-start;
-      }
-
       .question {
-        font-size: clamp(4rem, 25vw, 7rem);
+        font-size: clamp(4.2rem, 26vw, 7rem);
+      }
+
+      .stage {
+        gap: clamp(22px, 5svh, 36px);
       }
     }
 
-    @media (max-width: 370px) {
-      .metrics {
-        gap: 7px;
+    @media (max-width: 380px) {
+      body {
+        padding: 10px;
       }
 
-      .metric {
-        padding: 9px 8px;
+      .card {
+        padding: 16px;
       }
 
       .answer {
         min-height: 68px;
         border-radius: 20px;
+      }
+
+      .screenPanel {
+        gap: 14px;
       }
     }
 
@@ -663,55 +708,24 @@
 </head>
 <body>
   <main class="app" aria-label="Mental math game">
-    <header class="top">
-      <section class="metrics" aria-label="Scoreboard">
-        <div class="metric">
-          <span>Score</span>
-          <strong id="score">0</strong>
-        </div>
-        <div class="metric">
-          <span>Level</span>
-          <strong id="level">1</strong>
-        </div>
-        <div class="metric">
-          <span>Best</span>
-          <strong id="best">0</strong>
-        </div>
-      </section>
-
-      <div class="themeSwitch" aria-label="Theme">
-        <button class="themeOption" id="lightBtn" type="button" aria-pressed="true">Light</button>
-        <button class="themeOption" id="darkBtn" type="button" aria-pressed="false">Dark</button>
-      </div>
-    </header>
-
     <section class="card" id="card" aria-live="polite">
       <div class="resultMark" id="resultMark" aria-hidden="true">✓</div>
 
-
       <div class="screenOverlay show" id="screenOverlay" aria-hidden="false">
-        <div class="screenPanel">
-          <div class="finalResult" id="finalResult" hidden>
-            <span>Score</span>
-            <strong id="finalScore">0</strong>
-            <small id="finalBest">Best 0</small>
-          </div>
-          <button class="primaryAction" id="startBtn" type="button">Start</button>
-        </div>
+        <div class="screenPanel" id="screenPanel"></div>
       </div>
 
-      <div class="timerArea">
+      <div class="timerArea" aria-label="Timer">
         <div class="timeRow">
-          <div class="timeText"><span>Time</span><strong id="timeLeft">12.0</strong></div>
-          <div class="range" id="rangeLabel">0-10</div>
+          <span class="timeLabel">Time</span>
+          <strong class="timeLeft" id="timeLeft">12.0</strong>
         </div>
         <div class="timeBar" aria-hidden="true"><div class="timeFill" id="timeFill"></div></div>
-        <div class="levelTrack" aria-hidden="true"><div class="levelFill" id="levelFill"></div></div>
       </div>
 
       <div class="stage">
         <div class="problem enter" id="problemBox">
-          <h1 class="question" id="question">0 + 0</h1>
+          <h1 class="question" id="question">15 + 20</h1>
         </div>
         <div class="answers" id="answers" role="group" aria-label="Answer choices"></div>
       </div>
@@ -724,39 +738,26 @@
     (() => {
       "use strict";
 
-      const BEST_KEY = "mentalMathBestScore.v2";
-      const THEME_KEY = "mentalMathTheme.v2";
+      const BEST_KEY = "mentalMathBestScore.v4";
+      const THEME_KEY = "mentalMathTheme.v4";
       const NEXT_DELAY = 500;
-      const RESET_DELAY = 850;
+      const END_DELAY = 850;
 
       const els = {
-        body: document.body,
         card: document.getElementById("card"),
-        score: document.getElementById("score"),
-        level: document.getElementById("level"),
-        best: document.getElementById("best"),
-        rangeLabel: document.getElementById("rangeLabel"),
+        screenOverlay: document.getElementById("screenOverlay"),
+        screenPanel: document.getElementById("screenPanel"),
         timeLeft: document.getElementById("timeLeft"),
-        timeFill: document.getElementById("timeFill"),
-        levelFill: document.getElementById("levelFill"),
         problemBox: document.getElementById("problemBox"),
         question: document.getElementById("question"),
         answers: document.getElementById("answers"),
         resultMark: document.getElementById("resultMark"),
-        status: document.getElementById("status"),
-        screenOverlay: document.getElementById("screenOverlay"),
-        finalResult: document.getElementById("finalResult"),
-        finalScore: document.getElementById("finalScore"),
-        finalBest: document.getElementById("finalBest"),
-        startBtn: document.getElementById("startBtn"),
-        lightBtn: document.getElementById("lightBtn"),
-        darkBtn: document.getElementById("darkBtn")
+        status: document.getElementById("status")
       };
 
       const state = {
         score: 0,
         best: Number(localStorage.getItem(BEST_KEY) || 0),
-        level: 1,
         current: null,
         accepting: false,
         timerFrame: 0,
@@ -789,30 +790,74 @@
       function setTheme(theme) {
         const safeTheme = theme === "dark" ? "dark" : "light";
         document.documentElement.dataset.theme = safeTheme;
-        els.body.dataset.theme = safeTheme;
-        els.lightBtn.setAttribute("aria-pressed", String(safeTheme === "light"));
-        els.darkBtn.setAttribute("aria-pressed", String(safeTheme === "dark"));
         localStorage.setItem(THEME_KEY, safeTheme);
         const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute("content", safeTheme === "dark" ? "#0e0d0b" : "#f7f2ea");
+        if (meta) meta.setAttribute("content", safeTheme === "dark" ? "#0e0d0b" : "#f7f0e6");
+        updateThemeButtons();
       }
 
+      function updateThemeButtons() {
+        const active = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+        document.querySelectorAll(".themeOption").forEach(button => {
+          button.setAttribute("aria-pressed", String(button.dataset.theme === active));
+        });
+      }
+
+      function themePicker(options = {}) {
+        const compactClass = options.compact ? " compactTheme" : "";
+        const bottomClass = options.bottom ? " bottomTheme" : "";
+        return `
+          <div class="themeBlock${compactClass}${bottomClass}">
+            <span class="themeLabel">Background</span>
+            <div class="themeSwitch" aria-label="Background theme">
+              <button class="themeOption" type="button" data-theme="light" aria-pressed="false">Light</button>
+              <button class="themeOption" type="button" data-theme="dark" aria-pressed="false">Dark</button>
+            </div>
+          </div>
+        `;
+      }
+
+      function wireOverlayControls() {
+        document.querySelectorAll(".themeOption").forEach(button => {
+          button.addEventListener("click", () => setTheme(button.dataset.theme));
+        });
+        const startButton = document.getElementById("startBtn");
+        if (startButton) startButton.addEventListener("click", startRun);
+        updateThemeButtons();
+      }
+
+      function showOverlay() {
+        els.screenOverlay.classList.add("show");
+        els.screenOverlay.setAttribute("aria-hidden", "false");
+      }
+
+      function hideOverlay() {
+        els.screenOverlay.classList.remove("show");
+        els.screenOverlay.setAttribute("aria-hidden", "true");
+      }
 
       function showStartScreen() {
         stopTimer();
         state.accepting = false;
         state.mode = "ready";
-        els.finalResult.hidden = true;
-        els.startBtn.textContent = "Start";
-        els.screenOverlay.classList.add("show");
-        els.screenOverlay.setAttribute("aria-hidden", "false");
         setTimeProgress(100, getProfile(0).time);
-        els.status.textContent = "Ready.";
-      }
-
-      function hideScreen() {
-        els.screenOverlay.classList.remove("show");
-        els.screenOverlay.setAttribute("aria-hidden", "true");
+        els.answers.innerHTML = "";
+        els.question.textContent = "0 + 0";
+        els.screenPanel.className = "screenPanel";
+        els.screenPanel.innerHTML = `
+          <p class="eyebrow">Number Lab</p>
+          <h2 class="screenTitle">I challange you</h2>
+          <p class="screenText">Solve addition and subtraction before the timer runs out. Each correct answer makes the next questions harder. One wrong answer ends the run.</p>
+          <div class="bestBox" aria-label="Best practice score">
+            <span>Best practice</span>
+            <strong id="bestScore">${state.best}</strong>
+          </div>
+          ${themePicker()}
+          <button class="primaryAction" id="startBtn" type="button">Start</button>
+        `;
+        showOverlay();
+        wireOverlayControls();
+        els.status.textContent = "Game ready.";
       }
 
       function showEndScreen(finalScore) {
@@ -820,36 +865,43 @@
         state.accepting = false;
         state.mode = "ended";
         saveBest();
-        updateStats();
-        els.finalScore.textContent = String(finalScore);
-        els.finalBest.textContent = `Best ${state.best}`;
-        els.finalResult.hidden = false;
-        els.startBtn.textContent = "Start again";
-        els.screenOverlay.classList.add("show");
-        els.screenOverlay.setAttribute("aria-hidden", "false");
-        els.status.textContent = `Run ended. Final score ${finalScore}.`;
+        els.screenPanel.className = "screenPanel endPanel";
+        els.screenPanel.innerHTML = `
+          <p class="eyebrow">Practice ended</p>
+          <div class="scoreResult" aria-label="Final score">
+            <span>Score</span>
+            <strong>${finalScore}</strong>
+          </div>
+          <div class="endBest" aria-label="Best practice score">
+            <span>Best practice</span>
+            <strong>${state.best}</strong>
+          </div>
+          <button class="primaryAction" id="startBtn" type="button">Start again</button>
+          ${themePicker({ compact: true, bottom: true })}
+        `;
+        showOverlay();
+        wireOverlayControls();
+        els.status.textContent = `Run ended. Final score ${finalScore}. Best practice ${state.best}.`;
       }
 
       function startRun() {
         stopTimer();
         clearReaction();
         state.score = 0;
-        state.level = 1;
         state.current = null;
         state.accepting = false;
         state.mode = "playing";
-        updateStats();
-        hideScreen();
+        hideOverlay();
         renderProblem();
       }
 
       function getProfile(score) {
-        const level = Math.floor(score / 4) + 1;
-        const tier = Math.min(level, 18);
-        const time = clamp(12.5 - (tier - 1) * 0.45, 5.2, 12.5);
-        const negativeAllowed = tier >= 6;
-        const mixedDigits = tier >= 10;
-        const subtractionBias = clamp(0.34 + tier * 0.028, 0.38, 0.62);
+        const step = Math.floor(score / 4);
+        const tier = Math.min(step + 1, 18);
+        const time = clamp(12.5 - step * 0.45, 5.2, 12.5);
+        const negativeAllowed = tier >= 7;
+        const mixedDigits = tier >= 8;
+        const subtractionBias = clamp(0.34 + tier * 0.028, 0.36, 0.64);
 
         let min = 0;
         let max = 10;
@@ -865,15 +917,15 @@
         else if (tier <= 15) { min = 120; max = 850; }
         else { min = 180; max = 999; }
 
-        return { level, tier, min, max, time, negativeAllowed, mixedDigits, subtractionBias };
+        return { tier, min, max, time, negativeAllowed, mixedDigits, subtractionBias };
       }
 
       function makeNumber(profile) {
         let value = randInt(profile.min, profile.max);
 
-        if (profile.tier >= 5 && Math.random() < 0.48) {
-          const base = Math.round(value / 10) * 10;
-          value = clamp(base + choose([-2, -1, 1, 2, 3, 7, 8, 9]), profile.min, profile.max);
+        if (profile.tier >= 5 && Math.random() < 0.5) {
+          const rounded = Math.round(value / 10) * 10;
+          value = clamp(rounded + choose([-3, -2, -1, 1, 2, 3, 7, 8, 9]), profile.min, profile.max);
         }
 
         if (profile.mixedDigits && Math.random() < 0.35) {
@@ -893,7 +945,7 @@
           [a, b] = [b, a];
         }
 
-        if (operation === "+" && profile.tier <= 2 && Math.random() < 0.25) {
+        if (operation === "+" && profile.tier <= 2 && Math.random() < 0.3) {
           b = randInt(1, 9);
         }
 
@@ -903,9 +955,9 @@
 
       function closeOffsets(answer, profile) {
         const magnitude = Math.max(1, Math.abs(answer));
-        const small = clamp(Math.round(magnitude * 0.03), 1, 18);
-        const medium = clamp(Math.round(magnitude * 0.06), 2, 34);
-        const levelPush = clamp(profile.tier, 1, 18);
+        const tiny = clamp(Math.round(magnitude * 0.025), 1, 14);
+        const small = clamp(Math.round(magnitude * 0.05), 2, 28);
+        const tier = profile.tier;
         const offsets = new Set();
 
         [1, 2, 3, 4, 5].forEach(n => {
@@ -913,14 +965,14 @@
           offsets.add(-n);
         });
 
-        [small, medium, levelPush, levelPush + 1, 10, -10].forEach(n => {
+        [tiny, small, tier, tier + 1, 10, -10].forEach(n => {
           if (n !== 0) {
             offsets.add(n);
             offsets.add(-n);
           }
         });
 
-        if (profile.tier >= 5) {
+        if (tier >= 5) {
           [9, 11, 19, 20, 21].forEach(n => {
             offsets.add(n);
             offsets.add(-n);
@@ -933,11 +985,11 @@
       function createChoices(answer, profile) {
         const choices = new Set([answer]);
         const offsets = closeOffsets(answer, profile);
+        const maxDistance = clamp(7 + profile.tier * 2.7 + Math.abs(answer) * 0.055, 7, 68);
 
         for (const offset of offsets) {
           if (choices.size >= 4) break;
           const candidate = answer + offset;
-          const maxDistance = clamp(8 + profile.tier * 3 + Math.abs(answer) * 0.08, 8, 80);
           if (Math.abs(candidate - answer) <= maxDistance) {
             choices.add(candidate);
           }
@@ -946,7 +998,7 @@
         let guard = 0;
         while (choices.size < 4 && guard < 100) {
           guard += 1;
-          const maxOffset = clamp(3 + profile.tier * 2, 4, 36);
+          const maxOffset = clamp(3 + profile.tier * 2, 4, 34);
           const offset = randInt(-maxOffset, maxOffset);
           if (offset !== 0) choices.add(answer + offset);
         }
@@ -974,7 +1026,7 @@
         setTimeProgress(100, seconds);
 
         const tick = now => {
-          if (!state.accepting) return;
+          if (!state.accepting || state.mode !== "playing") return;
           const elapsed = now - state.timerStartedAt;
           const remainingMs = Math.max(0, state.timerLimitMs - elapsed);
           const percent = (remainingMs / state.timerLimitMs) * 100;
@@ -989,16 +1041,6 @@
         };
 
         state.timerFrame = requestAnimationFrame(tick);
-      }
-
-      function updateStats() {
-        const profile = getProfile(state.score);
-        state.level = profile.level;
-        els.score.textContent = String(state.score);
-        els.level.textContent = String(profile.level);
-        els.best.textContent = String(state.best);
-        els.rangeLabel.textContent = `${profile.min}-${profile.max}`;
-        els.levelFill.style.width = `${((state.score % 4) / 4) * 100}%`;
       }
 
       function animateQuestion() {
@@ -1023,9 +1065,8 @@
 
       function renderProblem() {
         clearReaction();
-        hideScreen();
+        hideOverlay();
         state.mode = "playing";
-        updateStats();
         state.current = createProblem();
         state.accepting = true;
 
@@ -1065,7 +1106,7 @@
 
       function finishRun() {
         const finalScore = state.score;
-        window.setTimeout(() => showEndScreen(finalScore), RESET_DELAY);
+        window.setTimeout(() => showEndScreen(finalScore), END_DELAY);
       }
 
       function markCorrectButton(correctAnswer, selectedButton) {
@@ -1077,7 +1118,7 @@
       }
 
       function handleAnswer(button, value) {
-        if (!state.accepting || !state.current) return;
+        if (!state.accepting || !state.current || state.mode !== "playing") return;
         state.accepting = false;
         stopTimer();
         disableAnswers();
@@ -1092,7 +1133,6 @@
             if (other !== button) other.classList.add("dimmed");
           });
           showReaction("good");
-          updateStats();
           els.status.textContent = "Correct.";
           window.setTimeout(renderProblem, NEXT_DELAY);
           return;
@@ -1101,26 +1141,27 @@
         button.classList.add("wrong");
         markCorrectButton(state.current.answer, button);
         showReaction("bad");
-        els.status.textContent = `Wrong. Correct answer was ${state.current.answer}. Score reset.`;
+        els.status.textContent = `Wrong. Correct answer was ${state.current.answer}.`;
         finishRun();
       }
 
       function handleTimeout() {
-        if (!state.accepting || !state.current) return;
+        if (!state.accepting || !state.current || state.mode !== "playing") return;
         state.accepting = false;
         stopTimer();
         disableAnswers();
         setTimeProgress(0, 0);
         markCorrectButton(state.current.answer, null);
         showReaction("bad");
-        els.status.textContent = `Time expired. Correct answer was ${state.current.answer}. Score reset.`;
+        els.status.textContent = `Time expired. Correct answer was ${state.current.answer}.`;
         finishRun();
       }
 
       document.addEventListener("keydown", event => {
         if ((state.mode === "ready" || state.mode === "ended") && (event.key === "Enter" || event.key === " ")) {
           event.preventDefault();
-          els.startBtn.click();
+          const startButton = document.getElementById("startBtn");
+          if (startButton) startButton.click();
           return;
         }
 
@@ -1131,14 +1172,9 @@
         if (button) button.click();
       });
 
-      els.startBtn.addEventListener("click", startRun);
-      els.lightBtn.addEventListener("click", () => setTheme("light"));
-      els.darkBtn.addEventListener("click", () => setTheme("dark"));
-
       const savedTheme = localStorage.getItem(THEME_KEY);
       const preferredTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       setTheme(savedTheme || preferredTheme);
-      updateStats();
       showStartScreen();
     })();
   </script>
