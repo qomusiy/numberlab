@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f2ea" />
+  <title>Mental Math</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f2ea;
+      --bg-2: #efe6da;
+      --surface: rgba(255, 252, 247, 0.78);
+      --surface-strong: rgba(255, 252, 247, 0.94);
+      --text: #171512;
+      --muted: #746b60;
+      --line: rgba(23, 21, 18, 0.12);
+      --line-strong: rgba(23, 21, 18, 0.20);
+      --accent: #191714;
+      --accent-soft: rgba(25, 23, 20, 0.08);
+      --gold: #a67d45;
+      --good: #15835a;
+      --good-soft: rgba(21, 131, 90, 0.15);
+      --bad: #bd3d36;
+      --bad-soft: rgba(189, 61, 54, 0.16);
+      --shadow: 0 28px 88px rgba(54, 45, 32, 0.18);
+      --shadow-soft: 0 18px 42px rgba(54, 45, 32, 0.11);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --time-progress: 100%;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0e0d0b;
+      --bg-2: #191611;
+      --surface: rgba(28, 25, 20, 0.78);
+      --surface-strong: rgba(34, 30, 24, 0.94);
+      --text: #fff7ea;
+      --muted: #b8ab99;
+      --line: rgba(255, 247, 234, 0.12);
+      --line-strong: rgba(255, 247, 234, 0.22);
+      --accent: #fff7ea;
+      --accent-soft: rgba(255, 247, 234, 0.08);
+      --gold: #d0a461;
+      --good: #42c58d;
+      --good-soft: rgba(66, 197, 141, 0.16);
+      --bad: #ef6a61;
+      --bad-soft: rgba(239, 106, 97, 0.18);
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.36);
+      --shadow-soft: 0 18px 42px rgba(0, 0, 0, 0.24);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.72), transparent 27rem),
+        radial-gradient(circle at 82% 92%, rgba(166, 125, 69, 0.24), transparent 28rem),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+      transition: background 260ms ease, color 260ms ease;
+      overflow-x: hidden;
+    }
+
+    [data-theme="dark"] body,
+    body[data-theme="dark"] {
+      background:
+        radial-gradient(circle at 16% 0%, rgba(255, 247, 234, 0.10), transparent 27rem),
+        radial-gradient(circle at 82% 92%, rgba(208, 164, 97, 0.18), transparent 28rem),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+    }
+
+    .app {
+      width: min(100%, 780px);
+      min-height: min(760px, calc(100svh - 28px));
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+      animation: pageIn 520ms ease both;
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .metric {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 11px 12px;
+      background: color-mix(in srgb, var(--surface-strong), transparent 18%);
+      box-shadow: 0 10px 26px rgba(54, 45, 32, 0.06);
+      backdrop-filter: blur(18px);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 780;
+      letter-spacing: 0.11em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(1.28rem, 6vw, 2rem);
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+    }
+
+    .themeSwitch {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface-strong), transparent 20%);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 10px 26px rgba(54, 45, 32, 0.06);
+    }
+
+    .themeOption {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 12px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 760;
+      transition: background 220ms ease, color 220ms ease, transform 220ms ease;
+    }
+
+    .themeOption[aria-pressed="true"] {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .themeOption:active {
+      transform: scale(0.96);
+    }
+
+    .card {
+      position: relative;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(18px, 4svh, 32px);
+      overflow: hidden;
+      isolation: isolate;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      padding: clamp(18px, 4.4vw, 40px);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px);
+      transition: border-color 260ms ease, background 260ms ease, box-shadow 260ms ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        linear-gradient(125deg, rgba(255, 255, 255, 0.58), transparent 34%),
+        radial-gradient(circle at 80% 6%, rgba(166, 125, 69, 0.14), transparent 19rem);
+    }
+
+    [data-theme="dark"] .card::before {
+      background:
+        linear-gradient(125deg, rgba(255, 247, 234, 0.08), transparent 34%),
+        radial-gradient(circle at 80% 6%, rgba(208, 164, 97, 0.14), transparent 19rem);
+    }
+
+    .card.correctPulse {
+      animation: correctPulse 520ms ease;
+    }
+
+    .card.wrongPulse {
+      animation: wrongPulse 520ms ease;
+    }
+
+    .timerArea {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .timeText {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 780;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .timeText strong {
+      color: var(--text);
+      font-size: 1.12rem;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timeBar {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid var(--line);
+    }
+
+    .timeFill {
+      width: var(--time-progress);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      transition: width 80ms linear;
+      transform-origin: left center;
+    }
+
+    .levelTrack {
+      position: relative;
+      height: 6px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--accent-soft);
+    }
+
+    .levelFill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: var(--gold);
+      transition: width 420ms cubic-bezier(.22, .61, .36, 1);
+    }
+
+    .stage {
+      min-height: 0;
+      display: grid;
+      align-content: center;
+      gap: clamp(22px, 6svh, 44px);
+    }
+
+    .problem {
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      gap: 10px;
+      transform-origin: center;
+    }
+
+    .problem.enter {
+      animation: questionEnter 340ms ease both;
+    }
+
+    .range {
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 820;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .question {
+      margin: 0;
+      font-size: clamp(4.4rem, 21vw, 9.8rem);
+      font-weight: 850;
+      letter-spacing: -0.095em;
+      line-height: 0.88;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(10px, 2.8vw, 16px);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .answer {
+      position: relative;
+      min-height: clamp(74px, 18svh, 116px);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: color-mix(in srgb, var(--surface-strong), transparent 20%);
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(54, 45, 32, 0.07);
+      font-size: clamp(2rem, 10vw, 4.4rem);
+      font-weight: 820;
+      letter-spacing: -0.07em;
+      font-variant-numeric: tabular-nums;
+      transition:
+        transform 220ms ease,
+        box-shadow 220ms ease,
+        background 220ms ease,
+        border-color 220ms ease,
+        opacity 220ms ease;
+      touch-action: manipulation;
+    }
+
+    .answer::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+      transform: translateX(-130%);
+      transition: transform 520ms ease;
+    }
+
+    [data-theme="dark"] .answer::after {
+      background: linear-gradient(115deg, transparent, rgba(255, 247, 234, 0.13), transparent);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .answer:hover:not(:disabled) {
+        transform: translateY(-4px);
+        border-color: var(--line-strong);
+        box-shadow: 0 18px 38px rgba(54, 45, 32, 0.13);
+      }
+
+      .answer:hover:not(:disabled)::after {
+        transform: translateX(130%);
+      }
+    }
+
+    .answer:active:not(:disabled) {
+      transform: scale(0.985);
+    }
+
+    .answer:focus-visible,
+    .themeOption:focus-visible,
+    .primaryAction:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--gold), transparent 48%);
+      outline-offset: 3px;
+    }
+
+    .answer.correct {
+      border-color: color-mix(in srgb, var(--good), transparent 40%);
+      background: var(--good-soft);
+      color: color-mix(in srgb, var(--good), var(--text) 20%);
+      animation: answerCorrect 520ms ease both;
+    }
+
+    .answer.wrong {
+      border-color: color-mix(in srgb, var(--bad), transparent 40%);
+      background: var(--bad-soft);
+      color: color-mix(in srgb, var(--bad), var(--text) 16%);
+      animation: answerWrong 430ms ease both;
+    }
+
+    .answer.dimmed {
+      opacity: 0.42;
+      transform: scale(0.985);
+    }
+
+    .resultMark {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 5;
+      width: clamp(82px, 24vw, 132px);
+      height: clamp(82px, 24vw, 132px);
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--surface-strong);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      font-size: clamp(2.2rem, 11vw, 4.4rem);
+      font-weight: 850;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+
+    .resultMark.show.good {
+      color: var(--good);
+      animation: markPop 520ms ease both;
+    }
+
+    .resultMark.show.bad {
+      color: var(--bad);
+      animation: markPop 580ms ease both;
+    }
+
+
+    .screenOverlay {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: grid;
+      place-items: center;
+      padding: clamp(22px, 6vw, 46px);
+      background: color-mix(in srgb, var(--surface-strong), transparent 3%);
+      backdrop-filter: blur(22px);
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.985);
+      transition: opacity 260ms ease, transform 260ms ease;
+    }
+
+    .screenOverlay.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    .screenPanel {
+      width: min(100%, 360px);
+      display: grid;
+      justify-items: center;
+      gap: 22px;
+      text-align: center;
+      animation: questionEnter 360ms ease both;
+    }
+
+    .finalResult {
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+    }
+
+    .finalResult[hidden] {
+      display: none;
+    }
+
+    .finalResult span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 820;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .finalResult strong {
+      color: var(--text);
+      font-size: clamp(4.4rem, 24vw, 8.4rem);
+      font-weight: 860;
+      letter-spacing: -0.1em;
+      line-height: 0.88;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .finalResult small {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 740;
+      letter-spacing: -0.01em;
+    }
+
+    .primaryAction {
+      width: min(100%, 300px);
+      min-height: 68px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--bg);
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      font-size: clamp(1.05rem, 4.6vw, 1.28rem);
+      font-weight: 820;
+      letter-spacing: -0.02em;
+      transition: transform 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+      touch-action: manipulation;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .primaryAction:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+      }
+    }
+
+    .primaryAction:active {
+      transform: scale(0.975);
+    }
+
+    .srOnly {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes questionEnter {
+      from { opacity: 0; transform: translateY(12px) scale(0.985); filter: blur(5px); }
+      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    @keyframes answerCorrect {
+      0% { transform: scale(1); }
+      42% { transform: scale(1.045); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes answerWrong {
+      0%, 100% { transform: translateX(0); }
+      18% { transform: translateX(-8px); }
+      36% { transform: translateX(8px); }
+      54% { transform: translateX(-6px); }
+      72% { transform: translateX(6px); }
+    }
+
+    @keyframes correctPulse {
+      0% { box-shadow: var(--shadow); }
+      44% { box-shadow: 0 0 0 10px var(--good-soft), var(--shadow); }
+      100% { box-shadow: var(--shadow); }
+    }
+
+    @keyframes wrongPulse {
+      0%, 100% { transform: translateX(0); box-shadow: var(--shadow); }
+      18% { transform: translateX(-7px); }
+      36% { transform: translateX(7px); box-shadow: 0 0 0 10px var(--bad-soft), var(--shadow); }
+      54% { transform: translateX(-5px); }
+      72% { transform: translateX(5px); }
+    }
+
+    @keyframes markPop {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.68); }
+      22% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+      72% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.92); }
+    }
+
+    @media (min-width: 760px) {
+      body {
+        padding: 28px;
+      }
+
+      .app {
+        gap: 18px;
+      }
+
+      .answers {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .answer {
+        min-height: 104px;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .app {
+        min-height: calc(100svh - 28px);
+      }
+
+      .top {
+        grid-template-columns: 1fr;
+      }
+
+      .themeSwitch {
+        width: 100%;
+      }
+
+      .themeOption {
+        flex: 1;
+        padding-block: 11px;
+      }
+
+      .card {
+        border-radius: 30px;
+      }
+
+      .metric {
+        border-radius: 17px;
+        padding: 10px;
+      }
+
+      .metric span {
+        font-size: 0.62rem;
+      }
+
+      .timeRow {
+        align-items: flex-start;
+      }
+
+      .question {
+        font-size: clamp(4rem, 25vw, 7rem);
+      }
+    }
+
+    @media (max-width: 370px) {
+      .metrics {
+        gap: 7px;
+      }
+
+      .metric {
+        padding: 9px 8px;
+      }
+
+      .answer {
+        min-height: 68px;
+        border-radius: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" aria-label="Mental math game">
+    <header class="top">
+      <section class="metrics" aria-label="Scoreboard">
+        <div class="metric">
+          <span>Score</span>
+          <strong id="score">0</strong>
+        </div>
+        <div class="metric">
+          <span>Level</span>
+          <strong id="level">1</strong>
+        </div>
+        <div class="metric">
+          <span>Best</span>
+          <strong id="best">0</strong>
+        </div>
+      </section>
+
+      <div class="themeSwitch" aria-label="Theme">
+        <button class="themeOption" id="lightBtn" type="button" aria-pressed="true">Light</button>
+        <button class="themeOption" id="darkBtn" type="button" aria-pressed="false">Dark</button>
+      </div>
+    </header>
+
+    <section class="card" id="card" aria-live="polite">
+      <div class="resultMark" id="resultMark" aria-hidden="true">✓</div>
+
+
+      <div class="screenOverlay show" id="screenOverlay" aria-hidden="false">
+        <div class="screenPanel">
+          <div class="finalResult" id="finalResult" hidden>
+            <span>Score</span>
+            <strong id="finalScore">0</strong>
+            <small id="finalBest">Best 0</small>
+          </div>
+          <button class="primaryAction" id="startBtn" type="button">Start</button>
+        </div>
+      </div>
+
+      <div class="timerArea">
+        <div class="timeRow">
+          <div class="timeText"><span>Time</span><strong id="timeLeft">12.0</strong></div>
+          <div class="range" id="rangeLabel">0-10</div>
+        </div>
+        <div class="timeBar" aria-hidden="true"><div class="timeFill" id="timeFill"></div></div>
+        <div class="levelTrack" aria-hidden="true"><div class="levelFill" id="levelFill"></div></div>
+      </div>
+
+      <div class="stage">
+        <div class="problem enter" id="problemBox">
+          <h1 class="question" id="question">0 + 0</h1>
+        </div>
+        <div class="answers" id="answers" role="group" aria-label="Answer choices"></div>
+      </div>
+    </section>
+
+    <p class="srOnly" id="status" aria-live="assertive">Game ready.</p>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const BEST_KEY = "mentalMathBestScore.v2";
+      const THEME_KEY = "mentalMathTheme.v2";
+      const NEXT_DELAY = 500;
+      const RESET_DELAY = 850;
+
+      const els = {
+        body: document.body,
+        card: document.getElementById("card"),
+        score: document.getElementById("score"),
+        level: document.getElementById("level"),
+        best: document.getElementById("best"),
+        rangeLabel: document.getElementById("rangeLabel"),
+        timeLeft: document.getElementById("timeLeft"),
+        timeFill: document.getElementById("timeFill"),
+        levelFill: document.getElementById("levelFill"),
+        problemBox: document.getElementById("problemBox"),
+        question: document.getElementById("question"),
+        answers: document.getElementById("answers"),
+        resultMark: document.getElementById("resultMark"),
+        status: document.getElementById("status"),
+        screenOverlay: document.getElementById("screenOverlay"),
+        finalResult: document.getElementById("finalResult"),
+        finalScore: document.getElementById("finalScore"),
+        finalBest: document.getElementById("finalBest"),
+        startBtn: document.getElementById("startBtn"),
+        lightBtn: document.getElementById("lightBtn"),
+        darkBtn: document.getElementById("darkBtn")
+      };
+
+      const state = {
+        score: 0,
+        best: Number(localStorage.getItem(BEST_KEY) || 0),
+        level: 1,
+        current: null,
+        accepting: false,
+        timerFrame: 0,
+        timerStartedAt: 0,
+        timerLimitMs: 12000,
+        mode: "ready"
+      };
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
+
+      function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function choose(list) {
+        return list[randInt(0, list.length - 1)];
+      }
+
+      function shuffle(items) {
+        const copy = [...items];
+        for (let i = copy.length - 1; i > 0; i -= 1) {
+          const j = randInt(0, i);
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function setTheme(theme) {
+        const safeTheme = theme === "dark" ? "dark" : "light";
+        document.documentElement.dataset.theme = safeTheme;
+        els.body.dataset.theme = safeTheme;
+        els.lightBtn.setAttribute("aria-pressed", String(safeTheme === "light"));
+        els.darkBtn.setAttribute("aria-pressed", String(safeTheme === "dark"));
+        localStorage.setItem(THEME_KEY, safeTheme);
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", safeTheme === "dark" ? "#0e0d0b" : "#f7f2ea");
+      }
+
+
+      function showStartScreen() {
+        stopTimer();
+        state.accepting = false;
+        state.mode = "ready";
+        els.finalResult.hidden = true;
+        els.startBtn.textContent = "Start";
+        els.screenOverlay.classList.add("show");
+        els.screenOverlay.setAttribute("aria-hidden", "false");
+        setTimeProgress(100, getProfile(0).time);
+        els.status.textContent = "Ready.";
+      }
+
+      function hideScreen() {
+        els.screenOverlay.classList.remove("show");
+        els.screenOverlay.setAttribute("aria-hidden", "true");
+      }
+
+      function showEndScreen(finalScore) {
+        stopTimer();
+        state.accepting = false;
+        state.mode = "ended";
+        saveBest();
+        updateStats();
+        els.finalScore.textContent = String(finalScore);
+        els.finalBest.textContent = `Best ${state.best}`;
+        els.finalResult.hidden = false;
+        els.startBtn.textContent = "Start again";
+        els.screenOverlay.classList.add("show");
+        els.screenOverlay.setAttribute("aria-hidden", "false");
+        els.status.textContent = `Run ended. Final score ${finalScore}.`;
+      }
+
+      function startRun() {
+        stopTimer();
+        clearReaction();
+        state.score = 0;
+        state.level = 1;
+        state.current = null;
+        state.accepting = false;
+        state.mode = "playing";
+        updateStats();
+        hideScreen();
+        renderProblem();
+      }
+
+      function getProfile(score) {
+        const level = Math.floor(score / 4) + 1;
+        const tier = Math.min(level, 18);
+        const time = clamp(12.5 - (tier - 1) * 0.45, 5.2, 12.5);
+        const negativeAllowed = tier >= 6;
+        const mixedDigits = tier >= 10;
+        const subtractionBias = clamp(0.34 + tier * 0.028, 0.38, 0.62);
+
+        let min = 0;
+        let max = 10;
+
+        if (tier === 1) { min = 0; max = 10; }
+        else if (tier === 2) { min = 1; max = 20; }
+        else if (tier === 3) { min = 4; max = 35; }
+        else if (tier === 4) { min = 8; max = 60; }
+        else if (tier === 5) { min = 12; max = 99; }
+        else if (tier <= 7) { min = 20; max = 150; }
+        else if (tier <= 9) { min = 40; max = 260; }
+        else if (tier <= 12) { min = 70; max = 520; }
+        else if (tier <= 15) { min = 120; max = 850; }
+        else { min = 180; max = 999; }
+
+        return { level, tier, min, max, time, negativeAllowed, mixedDigits, subtractionBias };
+      }
+
+      function makeNumber(profile) {
+        let value = randInt(profile.min, profile.max);
+
+        if (profile.tier >= 5 && Math.random() < 0.48) {
+          const base = Math.round(value / 10) * 10;
+          value = clamp(base + choose([-2, -1, 1, 2, 3, 7, 8, 9]), profile.min, profile.max);
+        }
+
+        if (profile.mixedDigits && Math.random() < 0.35) {
+          value = clamp(value + randInt(-19, 19), profile.min, profile.max);
+        }
+
+        return value;
+      }
+
+      function createProblem() {
+        const profile = getProfile(state.score);
+        const operation = Math.random() < profile.subtractionBias ? "-" : "+";
+        let a = makeNumber(profile);
+        let b = makeNumber(profile);
+
+        if (operation === "-" && !profile.negativeAllowed && b > a) {
+          [a, b] = [b, a];
+        }
+
+        if (operation === "+" && profile.tier <= 2 && Math.random() < 0.25) {
+          b = randInt(1, 9);
+        }
+
+        const answer = operation === "+" ? a + b : a - b;
+        return { a, b, operation, answer, profile };
+      }
+
+      function closeOffsets(answer, profile) {
+        const magnitude = Math.max(1, Math.abs(answer));
+        const small = clamp(Math.round(magnitude * 0.03), 1, 18);
+        const medium = clamp(Math.round(magnitude * 0.06), 2, 34);
+        const levelPush = clamp(profile.tier, 1, 18);
+        const offsets = new Set();
+
+        [1, 2, 3, 4, 5].forEach(n => {
+          offsets.add(n);
+          offsets.add(-n);
+        });
+
+        [small, medium, levelPush, levelPush + 1, 10, -10].forEach(n => {
+          if (n !== 0) {
+            offsets.add(n);
+            offsets.add(-n);
+          }
+        });
+
+        if (profile.tier >= 5) {
+          [9, 11, 19, 20, 21].forEach(n => {
+            offsets.add(n);
+            offsets.add(-n);
+          });
+        }
+
+        return shuffle([...offsets]).filter(n => n !== 0);
+      }
+
+      function createChoices(answer, profile) {
+        const choices = new Set([answer]);
+        const offsets = closeOffsets(answer, profile);
+
+        for (const offset of offsets) {
+          if (choices.size >= 4) break;
+          const candidate = answer + offset;
+          const maxDistance = clamp(8 + profile.tier * 3 + Math.abs(answer) * 0.08, 8, 80);
+          if (Math.abs(candidate - answer) <= maxDistance) {
+            choices.add(candidate);
+          }
+        }
+
+        let guard = 0;
+        while (choices.size < 4 && guard < 100) {
+          guard += 1;
+          const maxOffset = clamp(3 + profile.tier * 2, 4, 36);
+          const offset = randInt(-maxOffset, maxOffset);
+          if (offset !== 0) choices.add(answer + offset);
+        }
+
+        return shuffle([...choices]);
+      }
+
+      function stopTimer() {
+        if (state.timerFrame) {
+          cancelAnimationFrame(state.timerFrame);
+          state.timerFrame = 0;
+        }
+      }
+
+      function setTimeProgress(percent, seconds) {
+        const safePercent = clamp(percent, 0, 100);
+        document.documentElement.style.setProperty("--time-progress", `${safePercent}%`);
+        els.timeLeft.textContent = seconds.toFixed(1);
+      }
+
+      function startTimer(seconds) {
+        stopTimer();
+        state.timerLimitMs = seconds * 1000;
+        state.timerStartedAt = performance.now();
+        setTimeProgress(100, seconds);
+
+        const tick = now => {
+          if (!state.accepting) return;
+          const elapsed = now - state.timerStartedAt;
+          const remainingMs = Math.max(0, state.timerLimitMs - elapsed);
+          const percent = (remainingMs / state.timerLimitMs) * 100;
+          setTimeProgress(percent, remainingMs / 1000);
+
+          if (remainingMs <= 0) {
+            handleTimeout();
+            return;
+          }
+
+          state.timerFrame = requestAnimationFrame(tick);
+        };
+
+        state.timerFrame = requestAnimationFrame(tick);
+      }
+
+      function updateStats() {
+        const profile = getProfile(state.score);
+        state.level = profile.level;
+        els.score.textContent = String(state.score);
+        els.level.textContent = String(profile.level);
+        els.best.textContent = String(state.best);
+        els.rangeLabel.textContent = `${profile.min}-${profile.max}`;
+        els.levelFill.style.width = `${((state.score % 4) / 4) * 100}%`;
+      }
+
+      function animateQuestion() {
+        els.problemBox.classList.remove("enter");
+        void els.problemBox.offsetWidth;
+        els.problemBox.classList.add("enter");
+      }
+
+      function clearReaction() {
+        els.card.classList.remove("correctPulse", "wrongPulse");
+        els.resultMark.className = "resultMark";
+      }
+
+      function showReaction(type) {
+        clearReaction();
+        void els.card.offsetWidth;
+        void els.resultMark.offsetWidth;
+        els.card.classList.add(type === "good" ? "correctPulse" : "wrongPulse");
+        els.resultMark.textContent = type === "good" ? "✓" : "×";
+        els.resultMark.classList.add("show", type);
+      }
+
+      function renderProblem() {
+        clearReaction();
+        hideScreen();
+        state.mode = "playing";
+        updateStats();
+        state.current = createProblem();
+        state.accepting = true;
+
+        const { a, b, operation, answer, profile } = state.current;
+        const choices = createChoices(answer, profile);
+
+        els.question.textContent = `${a} ${operation} ${b}`;
+        els.answers.innerHTML = "";
+
+        choices.forEach((choice, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "answer";
+          button.textContent = String(choice);
+          button.dataset.value = String(choice);
+          button.setAttribute("aria-label", `Answer ${index + 1}: ${choice}`);
+          button.addEventListener("click", () => handleAnswer(button, choice));
+          els.answers.appendChild(button);
+        });
+
+        animateQuestion();
+        startTimer(profile.time);
+      }
+
+      function disableAnswers() {
+        [...els.answers.children].forEach(button => {
+          button.disabled = true;
+        });
+      }
+
+      function saveBest() {
+        if (state.score > state.best) {
+          state.best = state.score;
+          localStorage.setItem(BEST_KEY, String(state.best));
+        }
+      }
+
+      function finishRun() {
+        const finalScore = state.score;
+        window.setTimeout(() => showEndScreen(finalScore), RESET_DELAY);
+      }
+
+      function markCorrectButton(correctAnswer, selectedButton) {
+        [...els.answers.children].forEach(button => {
+          const isCorrect = Number(button.dataset.value) === correctAnswer;
+          if (isCorrect) button.classList.add("correct");
+          if (!isCorrect && button !== selectedButton) button.classList.add("dimmed");
+        });
+      }
+
+      function handleAnswer(button, value) {
+        if (!state.accepting || !state.current) return;
+        state.accepting = false;
+        stopTimer();
+        disableAnswers();
+
+        const isCorrect = value === state.current.answer;
+
+        if (isCorrect) {
+          state.score += 1;
+          saveBest();
+          button.classList.add("correct");
+          [...els.answers.children].forEach(other => {
+            if (other !== button) other.classList.add("dimmed");
+          });
+          showReaction("good");
+          updateStats();
+          els.status.textContent = "Correct.";
+          window.setTimeout(renderProblem, NEXT_DELAY);
+          return;
+        }
+
+        button.classList.add("wrong");
+        markCorrectButton(state.current.answer, button);
+        showReaction("bad");
+        els.status.textContent = `Wrong. Correct answer was ${state.current.answer}. Score reset.`;
+        finishRun();
+      }
+
+      function handleTimeout() {
+        if (!state.accepting || !state.current) return;
+        state.accepting = false;
+        stopTimer();
+        disableAnswers();
+        setTimeProgress(0, 0);
+        markCorrectButton(state.current.answer, null);
+        showReaction("bad");
+        els.status.textContent = `Time expired. Correct answer was ${state.current.answer}. Score reset.`;
+        finishRun();
+      }
+
+      document.addEventListener("keydown", event => {
+        if ((state.mode === "ready" || state.mode === "ended") && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          els.startBtn.click();
+          return;
+        }
+
+        if (!state.accepting || state.mode !== "playing") return;
+        if (!["1", "2", "3", "4"].includes(event.key)) return;
+        const index = Number(event.key) - 1;
+        const button = els.answers.children[index];
+        if (button) button.click();
+      });
+
+      els.startBtn.addEventListener("click", startRun);
+      els.lightBtn.addEventListener("click", () => setTheme("light"));
+      els.darkBtn.addEventListener("click", () => setTheme("dark"));
+
+      const savedTheme = localStorage.getItem(THEME_KEY);
+      const preferredTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      setTheme(savedTheme || preferredTheme);
+      updateStats();
+      showStartScreen();
+    })();
+  </script>
+</body>
+</html>
